@@ -1,4 +1,4 @@
-#!/home/ppesq/workspace/python/fil2014/env/bin/python
+#!/Users/bernardot/Documents/python/fil2014/env/bin/python
 from django.core import management
 
 if __name__ == "__main__":
