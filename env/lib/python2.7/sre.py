@@ -1,1 +1,1 @@
-/usr/lib/python2.7/sre.py
+/Library/Frameworks/Python.framework/Versions/7.3/lib/python2.7/sre.py
