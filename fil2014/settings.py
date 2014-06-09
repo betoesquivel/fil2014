@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'south',
     'searches',
     'presentations',
+    'exhibitors',
 )
 
 MIDDLEWARE_CLASSES = (
