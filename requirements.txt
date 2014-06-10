@@ -1,5 +1,8 @@
 Django==1.6.5
 South==0.8.4
 argparse==1.2.1
+backports.ssl-match-hostname==3.4.0.2
+livereload==2.2.0
 pytz==2014.4
+tornado==3.2.2
 wsgiref==0.1.2

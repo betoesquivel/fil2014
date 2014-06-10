@@ -71,8 +71,8 @@ class Category(models.Model):
 
 class Award(models.Model):
     name = models.CharField(max_length=50)
-    book = models.ForeignKey(Book)
-    author = models.ForeignKey(Author)
+    book = models.ForeignKey(Book, blank=True, null=True, default=0)
+    author = models.ForeignKey(Author, blank=True, null=True, default=0)
 
     def __unicode__(self):
         return self.name
@@ -89,7 +89,7 @@ class BookRegistered(models.Model):
     book = models.ForeignKey(Book)
 
     def __unicode__(self):
-        return u'%s %s' % (self.volunteer.name, self.book.name)
+        return u'%s %s' % (self.volunteer.name, self.book.title)
 
 
 

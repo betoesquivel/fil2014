@@ -1,1 +1,1 @@
-/Library/Frameworks/Python.framework/Versions/7.3/lib/python2.7/copy_reg.py
+/usr/lib/python2.7/copy_reg.py
