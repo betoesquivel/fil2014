@@ -1,0 +1,86 @@
+{% extends base.html %}
+{% block content %}
+    {% block welcome %}
+    <div class="text-center">
+        <h1 class="">Bienvenido al buscador de libros.</h1>
+
+        <p class="lead">Use this document as a way to quickly start any new project.
+        <br class="">All you get is this text and a mostly barebones HTML document.</p>
+    </div>
+    {% endblock %}
+
+    {% block search %}
+    <!-- Search bar -->
+    <div class="center">
+        <div class="input-group">
+            <input type="text" placeholder="Oprime Enter o el botón para buscar." class="form-control">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Delimitar Búsqueda  <span class="caret"></span></button>
+                <ul class="dropdown-menu pull-down">
+                    <li><a href="#">por autor</a></li>
+                    <li><a href="#">por título</a></li>
+                    <li><a href="#">por categoría</a></li>
+                    <li><a href="#">general</a></li>
+                </ul>
+                <button type="button" class="btn btn-info">Buscar</button>
+            </div><!-- /btn-group -->
+        </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+    <!-- End search bar -->
+    {% endblock %}
+
+    {% block results %}
+    <h4 class="">Se encontraron 5 resultados en nuestra base de datos.</h4>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th class="">Título</th>
+                <th class="">Autor</th>
+                <th class="">Editorial</th>
+                <th class="">Expositor</th>
+                <th class="">Stand</th>
+            </tr>
+            <tr>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="btn-group">
+        <button class="btn" contenteditable="false">1</button>
+        <button class="btn" contenteditable="false">2</button>
+        <button class="btn" contenteditable="false">3</button>
+    </div> <!-- button group -->
+    <h4 class="">Se encontraron 431 resultados en la base de datos de Google.</h4>
+
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th class="">Título</th>
+                <th class="">Autor</th>
+                <th class="">Editorial</th>
+                <th class="">Posible Expositor</th>
+                <th class="">Stand</th>
+            </tr>
+            <tr>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="btn-group">
+        <button class="btn" contenteditable="false">1</button>
+        <button class="btn" contenteditable="false">2</button>
+        <button class="btn" contenteditable="false">3</button>
+    </div> <!-- button group -->
+    {% endblock %}
+{% endblock %}
+
+
+
