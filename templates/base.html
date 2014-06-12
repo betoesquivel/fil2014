@@ -6,6 +6,7 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="{% static 'knockout3.1.0.js' %}"></script>
 
         <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-simplex.css' %}"/>
         <style type="text/css" media="all">
@@ -26,16 +27,16 @@
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li {% ifequal activeTab "libros" %}class="active"{% endifequal %}><a href="#" class="">Libros</a>
+                        <li {% ifequal activeTab "libros" %}class="active"{% endifequal %}><a href="/libros" class="">Libros</a>
 
                         </li>
-                        <li {% ifequal activeTab "expositores" %}class="active"{% endifequal %}><a href="#about" class="">Expositores y Conferencias</a>
+                        <li {% ifequal activeTab "expositores" %}class="active"{% endifequal %}><a href="/expositores-y-conferencias" class="">Expositores y Conferencias</a>
 
                         </li>
-                        <li {% ifequal activeTab "talleres" %}class="active"{% endifequal %}><a href="#contact" class="">Talleres para niños</a>
+                        <li {% ifequal activeTab "talleres" %}class="active"{% endifequal %}><a href="/talleres" class="">Talleres para niños</a>
 
                         </li>
-                        <li {% ifequal activeTab "otros" %}class="active"{% endifequal %}><a href="#contact" class="">Otros...</a>
+                        <li {% ifequal activeTab "otros" %}class="active"{% endifequal %}><a href="/otros" class="">Otros...</a>
 
                         </li>
                     </ul>
@@ -56,6 +57,12 @@
         });
         {% block js %}
         {% endblock %}
+        $(document).ready(function () {
+            $('.dropdown-toggle').dropdown();
+            {% block jQuery %}
+
+            {% endblock %}
+        });
     </script>
 </html>
 

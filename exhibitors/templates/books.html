@@ -1,0 +1,78 @@
+{% extends "baseSearch" %}
+
+{% block results %}
+    <h4 class="">Se encontraron 5 resultados en nuestra base de datos.</h4>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th class="">Título</th>
+                <th class="">Autor</th>
+                <th class="">Editorial</th>
+                <th class="">Expositor</th>
+                <th class="">Stand</th>
+            </tr>
+            <tr>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="btn-group">
+        <button class="btn" contenteditable="false">1</button>
+        <button class="btn" contenteditable="false">2</button>
+        <button class="btn" contenteditable="false">3</button>
+    </div> <!-- button group -->
+    <h4 class="">Se encontraron 431 resultados en la base de datos de Google.</h4>
+
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th class="">Título</th>
+                <th class="">Autor</th>
+                <th class="">Editorial</th>
+                <th class="">Posible Expositor</th>
+                <th class="">Stand</th>
+            </tr>
+            <tr>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+                <td class="">cell</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="btn-group">
+        <button class="btn" contenteditable="false">1</button>
+        <button class="btn" contenteditable="false">2</button>
+        <button class="btn" contenteditable="false">3</button>
+    </div> <!-- button group -->
+{% endblock %}
+
+{% block js %}
+/*
+    function searchViewModel() {
+        var self = this;
+
+        self.results = ko.observableArray([
+            {
+                title: 'Loving DBs!',
+                author: 'Lorena Gómez',
+                editorial: 'Alfaguara',
+                exhibitor: 'Planeta',
+                stand: 'F'
+            }
+        ]);
+
+    }
+
+    ko.applyBindings(new searchViewModel());
+*/
+{% endblock %}
+
+{% block jQuery %}
+
+{% endblock %}
