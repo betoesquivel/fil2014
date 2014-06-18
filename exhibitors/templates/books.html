@@ -1,61 +1,125 @@
-{% extends "baseSearch" %}
+{% extends "baseSearch.html" %}
+
+{% block search %}
+<!-- Search bar -->
+<div class="center">
+    <div class="input-group">
+        <input data-bind="value: actualQuery, valueUpdate: 'afterkeydown'"type="text" placeholder="Oprime Enter o el botón para buscar." class="form-control">
+        <div class="input-group-btn">
+            <button data-bind="html: delimiter" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Delimitar Búsqueda  <span class="caret"></span></button>
+            <ul class="dropdown-menu pull-down">
+                <li><a data-bind="click:$root.byAuthor" href="#">por autor</a></li>
+                <li><a data-bind="click:$root.byTitle" href="#">por título</a></li>
+                <li><a data-bind="click:$root.byCategory" href="#">por categoría</a></li>
+                <li><a data-bind="click:$root.byDefault" href="#">general</a></li>
+            </ul>
+            <button data-bind="click:$root.getResults"  type="button" class="btn btn-info">Buscar</button>
+        </div><!-- /btn-group -->
+    </div><!-- /input-group -->
+</div><!-- /.col-lg-6 -->
+<!-- End search bar -->
+{% endblock %}
 
 {% block results %}
-    <h4 class="">Se encontraron 5 resultados en nuestra base de datos.</h4>
-    <table class="table table-bordered">
-        <tbody>
-            <tr>
-                <th class="">Título</th>
-                <th class="">Autor</th>
-                <th class="">Editorial</th>
-                <th class="">Expositor</th>
-                <th class="">Stand</th>
-            </tr>
-            <tr>
-                <td class="">cell</td>
-                <td class="">cell</td>
-                <td class="">cell</td>
-                <td class="">cell</td>
-                <td class="">cell</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="btn-group">
-        <button class="btn" contenteditable="false">1</button>
-        <button class="btn" contenteditable="false">2</button>
-        <button class="btn" contenteditable="false">3</button>
-    </div> <!-- button group -->
-    <h4 class="">Se encontraron 431 resultados en la base de datos de Google.</h4>
+    <h4 data-bind="text: resultsDescription" class="">Se encontraron 8 resultados en nuestra base de datos.</h4>
+    <div data-bind="visible: results().length > 1">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th class="">Título</th>
+                    <th class="">Autor</th>
+                    <th class="">Editorial</th>
+                    <th class="">Expositor</th>
+                    <th class="">Stand</th>
+                </tr>
+                <tr>
+                    <td class="">cell</td>
+                    <td class="">cell</td>
+                    <td class="">cell</td>
+                    <td class="">cell</td>
+                    <td class="">cell</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="btn-group">
+            <button class="btn" contenteditable="false">1</button>
+            <button class="btn" contenteditable="false">2</button>
+            <button class="btn" contenteditable="false">3</button>
+        </div> <!-- button group -->
+        <h4 class="">Se encontraron 431 resultados en la base de datos de Google.</h4>
 
-    <table class="table table-bordered">
-        <tbody>
-            <tr>
-                <th class="">Título</th>
-                <th class="">Autor</th>
-                <th class="">Editorial</th>
-                <th class="">Posible Expositor</th>
-                <th class="">Stand</th>
-            </tr>
-            <tr>
-                <td class="">cell</td>
-                <td class="">cell</td>
-                <td class="">cell</td>
-                <td class="">cell</td>
-                <td class="">cell</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="btn-group">
-        <button class="btn" contenteditable="false">1</button>
-        <button class="btn" contenteditable="false">2</button>
-        <button class="btn" contenteditable="false">3</button>
-    </div> <!-- button group -->
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th class="">Título</th>
+                    <th class="">Autor</th>
+                    <th class="">Editorial</th>
+                    <th class="">Posible Expositor</th>
+                    <th class="">Stand</th>
+                </tr>
+                <tr>
+                    <td class="">cell</td>
+                    <td class="">cell</td>
+                    <td class="">cell</td>
+                    <td class="">cell</td>
+                    <td class="">cell</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="btn-group">
+            <button class="btn" contenteditable="false">1</button>
+            <button class="btn" contenteditable="false">2</button>
+            <button class="btn" contenteditable="false">3</button>
+        </div> <!-- button group -->
+    </div>
+
+    <!-- json display -->
+    <div>
+        <h2>DEBUG</h2>
+        <h4>View Model</h4>
+        <div>
+           <p><span data-bind="html: delimiter"></span></p>
+           <p><span data-bind="text: actualQuery"></span></p>
+           <p><span data-bind="text: resultsDescription"></span></p>
+           <table class="table table-bordered">
+                <tbody data-bind="foreach: results">
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Editorial</th>
+                        <th>Exhibitor</th>
+                        <th>Stand</th>
+                    </tr>
+                    <tr>
+                        <td data-bind="text: title">Title</td>
+                        <td data-bind="text: author">Author</td>
+                        <td data-bind="text: editorial">Editorial</td>
+                        <td data-bind="text: exhibitor">Exhibitor</td>
+                        <td data-bind="text: stand">Stand</td>
+                    </tr>
+                </tbody>
+           </table>
+        </div>
+
+        <h4 data-bind="with:jsonData">
+            JSON Data
+            <p data-bind="text:query"></p>
+        </h4>
+    </div>
+    <!-- end json display -->
 {% endblock %}
 
 {% block js %}
-/*
+    function result(title, author, editorial, exhibitor, stand){
+    
+
+    }
     function searchViewModel() {
         var self = this;
+
+        self.delimiter = ko.observable("Delimitar Búsqueda  <span class='caret'></span>");
+        self.actualQuery = ko.observable('');
+        self.resultsDescription = ko.observable("Realice su búsqueda.");
 
         self.results = ko.observableArray([
             {
@@ -67,10 +131,30 @@
             }
         ]);
 
-    }
+        self.jsonData = ko.observable();
 
-    ko.applyBindings(new searchViewModel());
-*/
+        // Behaviors
+        self.byTitle = function() {
+            self.delimiter("por título  <span class='caret'></span>");
+        };
+        self.byAuthor = function() {
+            self.delimiter("por autor  <span class='caret'></span>");
+        };
+        self.byCategory = function() {
+            self.delimiter("por categoría  <span class='caret'></span>");
+        };
+        self.byDefault = function() {
+            self.delimiter("Delimitar Búsqueda  <span class='caret'></span>");
+        };
+
+        self.getResults = function() {
+            q = self.actualQuery;
+            $.get('../expositores/libros/busqueda/', { query: q }, self.jsonData);
+        };
+
+    }
+    var vm = new searchViewModel();
+    ko.applyBindings(vm);
 {% endblock %}
 
 {% block jQuery %}
