@@ -9,6 +9,8 @@ def books(request):
 
 def getBooks(request):
     q = request.GET.get('query', '')
+    print "Query..."
+    print q
     data_to_dump = {
         'query' : q,
     }
