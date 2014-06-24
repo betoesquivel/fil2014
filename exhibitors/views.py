@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from exhibitors.models import Book, Author, Exhibitor
+from functions import generalGoogleQuery
 import json
 
 # Create your views here.
@@ -11,9 +12,7 @@ def getBooks(request):
     q = request.GET.get('query', '')
     print "Query..."
     print q
-    data_to_dump = {
-        'query' : q,
-    }
+    data_to_dump = generalGoogleQuery(q)
     data = json.dumps(data_to_dump)
     return HttpResponse(data, content_type='application/json')
 

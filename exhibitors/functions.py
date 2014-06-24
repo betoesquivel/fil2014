@@ -1,5 +1,6 @@
 import urllib
-from exhibitor.models import Book, Author, Exhibitor, Editorial, Stand
+import json
+from exhibitors.models import Book, Author, Exhibitor, Editorial, Stand
 
 def findGoogleResultsInDb(isbns):
     ourDbResults = {}
@@ -63,7 +64,7 @@ def parseIndustryIdentifiers(industryIdentifiers):
     for industryId in industryIdentifiers:
         if industryId['type'] == "ISBN_13":
             isbn = industryId['identifier']
-            break
+            return isbn
         else:
             if industryId['type'] == "ISBN_10":
                 isbn = industryId['identifier']
@@ -80,26 +81,34 @@ def parseGoogleResults(googleResults):
         # Get important information from the google result item
         # Use it to guess where the item would be in our db
         # add newItem to ourItems that contains the parsed google results
-        newItem = {
-            'title': item['title'],
-            'author': item['author'],
-            'editorial': item['publisher'],
-            'exhibitor': '-',
-            'stands' : [],
-        }
-        foundExhibitor = findPossibleExhibitor(newItem['editorial'])
-        if foundExhibitor is not None:
-            newItem['exhibitor'] = foundExhibitor.name
-            stands = findPossibleStands(foundExhibitor)
-            for s in stands:
-                newItem['stands'].append(s.location)
+        info = item['volumeInfo']
+        if 'industryIdentifiers' in info:
+            newItem = {
+                'title': '-',
+                'author': '-',
+                'editorial': '-',
+                'exhibitor': '-',
+                'stands' : [],
+            }
+            if 'title' in info:
+                newItem['title'] = info['title']
+            if 'authors' in info:
+                newItem['author'] = info['authors']
+            if 'publisher' in info:
+                newItem['editorial'] = info['publisher']
+                foundExhibitor = findPossibleExhibitor(newItem['editorial'])
+                if foundExhibitor is not None:
+                    newItem['exhibitor'] = foundExhibitor.name
+                    stands = findPossibleStands(foundExhibitor)
+                    for s in stands:
+                        newItem['stands'].append(s.location)
 
-        ourItems.append(newItem)
+            ourItems.append(newItem)
 
-        # Get ISBN_13 or, if missing, ISBN_10.
-        # And add the isbn to our list
-        newIsbn = parseIndustryIdentifiers(item['industryIdentifiers'])
-        ourIsbns.append(newIsbn)
+            # Get ISBN_13 or, if missing, ISBN_10.
+            # And add the isbn to our list
+            newIsbn = parseIndustryIdentifiers(info['industryIdentifiers'])
+            ourIsbns.append(newIsbn)
 
     ourResults['results'] = ourItems
     ourResults['isbns'] = ourIsbns
@@ -113,13 +122,15 @@ def generalGoogleQuery(query):
     searchResponse = urllib.urlopen(url)
     searchResults = searchResponse.read()
     # extract useful information from google results
-    googleResults = parseGoogleResults(searchResults)
+    googleResults = parseGoogleResults(json.loads(searchResults))
     ourDbResults = findGoogleResultsInDb(googleResults['isbns'])
 
     results = {
         'dbResults': ourDbResults,
         'googleResults': googleResults,
     }
+    print "RESULTS============="
+    print json.dumps(results, indent=4)
 
     return results
 
