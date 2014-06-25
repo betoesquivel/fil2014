@@ -24,7 +24,7 @@
     <h4 data-bind="text: googleResultsDescription" class="">Se encontraron 8 resultados en nuestra base de datos.</h4>
     <div data-bind="visible: googleResults().length > 1">
         <table class="table table-bordered">
-            <tbody>
+            <thead>
                 <tr>
                     <th class="">Título</th>
                     <th class="">Autor</th>
@@ -32,12 +32,14 @@
                     <th class="">Expositor</th>
                     <th class="">Stand</th>
                 </tr>
+            </thead>
+            <tbody data-bind="foreach: ourResults">
                 <tr>
-                    <td class="">cell</td>
-                    <td class="">cell</td>
-                    <td class="">cell</td>
-                    <td class="">cell</td>
-                    <td class="">cell</td>
+                    <td data-bind="text: title">Título</td>
+                    <td data-bind="text: author">Author</td>
+                    <td data-bind="text: editorial">Editorial</td>
+                    <td data-bind="text: exhibitor">Exhibitor</td>
+                    <td data-bind="text: stand">Stand</td>
                 </tr>
             </tbody>
         </table>
@@ -49,7 +51,7 @@
         <h4 class="">Se encontraron 431 resultados en la base de datos de Google.</h4>
 
         <table class="table table-bordered">
-            <tbody>
+            <thead>
                 <tr>
                     <th class="">Título</th>
                     <th class="">Autor</th>
@@ -57,12 +59,14 @@
                     <th class="">Posible Expositor</th>
                     <th class="">Stand</th>
                 </tr>
+            </thead>
+            <tbody data-bind="foreach: googleResults">
                 <tr>
-                    <td class="">cell</td>
-                    <td class="">cell</td>
-                    <td class="">cell</td>
-                    <td class="">cell</td>
-                    <td class="">cell</td>
+                    <td data-bind="text: title">Title</td>
+                    <td data-bind="text: author">Author</td>
+                    <td data-bind="text: editorial">Editorial</td>
+                    <td data-bind="text: exhibitor">Exhibitor</td>
+                    <td data-bind="text: stand">Stand</td>
                 </tr>
             </tbody>
         </table>
@@ -83,14 +87,14 @@
            <p><span data-bind="text: ourResultsDescription"></span></p>
            <p><span data-bind="text: googleResultsDescription"></span></p>
            <table class="table table-bordered">
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Editorial</th>
+                    <th>Expositor</th>
+                    <th>Stand</th>
+                </tr>
                 <tbody data-bind="foreach: ourResults">
-                    <tr>
-                        <th>Título</th>
-                        <th>Autor</th>
-                        <th>Editorial</th>
-                        <th>Expositor</th>
-                        <th>Stand</th>
-                    </tr>
                     <tr>
                         <td data-bind="text: title">Título</td>
                         <td data-bind="text: author">Author</td>
@@ -101,14 +105,14 @@
                 </tbody>
            </table>
            <table class="table table-bordered">
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Editorial</th>
+                    <th>Posible Expositor</th>
+                    <th>Stand</th>
+                </tr>
                 <tbody data-bind="foreach: googleResults">
-                    <tr>
-                        <th>Título</th>
-                        <th>Autor</th>
-                        <th>Editorial</th>
-                        <th>Posible Expositor</th>
-                        <th>Stand</th>
-                    </tr>
                     <tr>
                         <td data-bind="text: title">Title</td>
                         <td data-bind="text: author">Author</td>
@@ -142,18 +146,6 @@
 
         self.delimiter = ko.observable("Delimitar Búsqueda  <span class='caret'></span>");
         self.actualQuery = ko.observable('');
-        self.googleResultsDescription = ko.observable("Realice su búsqueda.");
-        self.ourResultsDescription = ko.observable("Realice su búsqueda.");
-
-        self.googleResults = ko.observableArray([
-            {
-                title: 'Loving DBs!',
-                author: 'Lorena Gómez',
-                editorial: 'Alfaguara',
-                exhibitor: 'Planeta',
-                stand: 'F'
-            }
-        ]);
 
         self.ourResults = ko.observableArray([
             {
@@ -164,6 +156,22 @@
                 stand: 'F'
             }
         ]);
+        self.googleResults = ko.observableArray([
+            {
+                title: 'Loving DBs!',
+                author: 'Lorena Gómez',
+                editorial: 'Alfaguara',
+                exhibitor: 'Planeta',
+                stand: 'F'
+            }
+        ]);
+
+        this.ourResultsDescription = ko.computed(function() {
+            return "Se han encontrado " + self.ourResults().length + " resultados en nuestra base de datos.";
+        }, self);
+        this.googleResultsDescription = ko.computed(function() {
+            return "Se han encontrado " + self.googleResults().length + " resultados en google que podrían estar en la feria.";
+        }, self);
 
         self.jsonData = ko.observable();
 
@@ -183,15 +191,41 @@
 
         self.getResults = function() {
             q = self.actualQuery;
-            $.get('../expositores/libros/busqueda/', { query: q }, self.jsonData);
-            // use observableArray.push(object) in order to push data to results
-            // cycle the jsonData and create results
-            // update observableArrays...
-            var json = jQuery.parseJSON(self.jsonData);
-            var our = [];
-            var google = [];
-            var jsonOur = json['dbResults'];
-            var jsonGoogle = json['googleResults']; console.log(typeof(jsonGoogle));
+            $.getJSON('../expositores/libros/busqueda/', { query: q }, function(data){
+                self.jsonData(data);
+                // use observableArray.push(object) in order to push data to results
+                // cycle the jsonData and create results
+                // update observableArrays...
+                var dbData = data['dbResults'];
+                var googleData = data['googleResults'];
+
+                var google = [];
+                for (var i = 0; i < googleData['results'].length; i++) {
+                    r = new Result(
+                        googleData['results'][i]['title'],
+                        googleData['results'][i]['author'][0],
+                        googleData['results'][i]['editorial'],
+                        googleData['results'][i]['exhibitor'],
+                        googleData['results'][i]['stands'][0]
+                    );
+                    google.push(r);
+                }
+                self.googleResults(google);
+                var db = [];
+                for (var i = 0; i < dbData['results'].length; i++) {
+                r = new Result(
+                    dbData['results'][i]['title'],
+                    dbData['results'][i]['author'][0],
+                    dbData['results'][i]['editorial'],
+                    dbData['results'][i]['exhibitor'],
+                    dbData['results'][i]['stands'][0]
+                );
+                    db.push(r);
+                }
+                self.ourResults(db);
+            });
+            //var jsonOur = json['dbResults'];
+            //var jsonGoogle = json['googleResults']; console.log(typeof(jsonGoogle));
             //for (var x = 0; x < results.length; x++) {
              //   console.log ( new Result(jsonGoogle['results'][x]['title'], 'uno', 'dos', 'tres', 'cuatro') )
            // }
