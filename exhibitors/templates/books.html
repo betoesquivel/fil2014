@@ -21,8 +21,8 @@
 {% endblock %}
 
 {% block results %}
-    <h4 data-bind="text: resultsDescription" class="">Se encontraron 8 resultados en nuestra base de datos.</h4>
-    <div data-bind="visible: results().length > 1">
+    <h4 data-bind="text: googleResultsDescription" class="">Se encontraron 8 resultados en nuestra base de datos.</h4>
+    <div data-bind="visible: googleResults().length > 1">
         <table class="table table-bordered">
             <tbody>
                 <tr>
@@ -80,14 +80,33 @@
         <div>
            <p><span data-bind="html: delimiter"></span></p>
            <p><span data-bind="text: actualQuery"></span></p>
-           <p><span data-bind="text: resultsDescription"></span></p>
+           <p><span data-bind="text: ourResultsDescription"></span></p>
+           <p><span data-bind="text: googleResultsDescription"></span></p>
            <table class="table table-bordered">
-                <tbody data-bind="foreach: results">
+                <tbody data-bind="foreach: ourResults">
                     <tr>
-                        <th>Title</th>
-                        <th>Author</th>
+                        <th>Título</th>
+                        <th>Autor</th>
                         <th>Editorial</th>
-                        <th>Exhibitor</th>
+                        <th>Expositor</th>
+                        <th>Stand</th>
+                    </tr>
+                    <tr>
+                        <td data-bind="text: title">Título</td>
+                        <td data-bind="text: author">Author</td>
+                        <td data-bind="text: editorial">Editorial</td>
+                        <td data-bind="text: exhibitor">Exhibitor</td>
+                        <td data-bind="text: stand">Stand</td>
+                    </tr>
+                </tbody>
+           </table>
+           <table class="table table-bordered">
+                <tbody data-bind="foreach: googleResults">
+                    <tr>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Editorial</th>
+                        <th>Posible Expositor</th>
                         <th>Stand</th>
                     </tr>
                     <tr>
@@ -110,18 +129,33 @@
 {% endblock %}
 
 {% block js %}
-    function result(title, author, editorial, exhibitor, stand){
-    
-
+    function Result(title, author, editorial, exhibitor, stand){
+        var self = this;
+        self.title = title;
+        self.author = author;
+        self.editorial = editorial;
+        self.exhibitor = exhibitor;
+        self.stand = stand;
     }
     function searchViewModel() {
         var self = this;
 
         self.delimiter = ko.observable("Delimitar Búsqueda  <span class='caret'></span>");
         self.actualQuery = ko.observable('');
-        self.resultsDescription = ko.observable("Realice su búsqueda.");
+        self.googleResultsDescription = ko.observable("Realice su búsqueda.");
+        self.ourResultsDescription = ko.observable("Realice su búsqueda.");
 
-        self.results = ko.observableArray([
+        self.googleResults = ko.observableArray([
+            {
+                title: 'Loving DBs!',
+                author: 'Lorena Gómez',
+                editorial: 'Alfaguara',
+                exhibitor: 'Planeta',
+                stand: 'F'
+            }
+        ]);
+
+        self.ourResults = ko.observableArray([
             {
                 title: 'Loving DBs!',
                 author: 'Lorena Gómez',
@@ -150,6 +184,17 @@
         self.getResults = function() {
             q = self.actualQuery;
             $.get('../expositores/libros/busqueda/', { query: q }, self.jsonData);
+            // use observableArray.push(object) in order to push data to results
+            // cycle the jsonData and create results
+            // update observableArrays...
+            var json = jQuery.parseJSON(self.jsonData);
+            var our = [];
+            var google = [];
+            var jsonOur = json['dbResults'];
+            var jsonGoogle = json['googleResults']; console.log(typeof(jsonGoogle));
+            //for (var x = 0; x < results.length; x++) {
+             //   console.log ( new Result(jsonGoogle['results'][x]['title'], 'uno', 'dos', 'tres', 'cuatro') )
+           // }
         };
 
     }
