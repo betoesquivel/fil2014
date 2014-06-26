@@ -4,7 +4,7 @@
 <!-- Search bar -->
 <div class="center">
     <form class="input-group">
-        <input data-bind="value: actualQuery, valueUpdate: 'afterkeydown'"type="text" placeholder="Oprime Enter o el botón para buscar." class="form-control">
+        <input id="searchBox" data-bind="value: actualQuery, valueUpdate: 'afterkeydown'"type="text" placeholder="Oprime Enter o el botón para buscar." class="form-control">
         <div class="input-group-btn">
             <button data-bind="html: delimiter" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Delimitar Búsqueda  <span class="caret"></span></button>
             <ul class="dropdown-menu pull-down">
@@ -190,7 +190,7 @@
         };
 
         self.getResults = function() {
-            q = self.actualQuery;
+            q = self.actualQuery();
             $.getJSON('../expositores/libros/busqueda/', { query: q }, function(data){
                 self.jsonData(data);
                 // use observableArray.push(object) in order to push data to results
@@ -224,11 +224,6 @@
                 }
                 self.ourResults(db);
             });
-            //var jsonOur = json['dbResults'];
-            //var jsonGoogle = json['googleResults']; console.log(typeof(jsonGoogle));
-            //for (var x = 0; x < results.length; x++) {
-             //   console.log ( new Result(jsonGoogle['results'][x]['title'], 'uno', 'dos', 'tres', 'cuatro') )
-           // }
         };
 
     }
@@ -237,5 +232,5 @@
 {% endblock %}
 
 {% block jQuery %}
-
+    $("#searchBox").focus();
 {% endblock %}

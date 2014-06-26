@@ -1,4 +1,5 @@
 import urllib
+from urllib import pathname2url
 import json
 from exhibitors.models import Book, Author, Exhibitor, Editorial, Stand
 
@@ -118,18 +119,39 @@ def parseGoogleResults(googleResults):
 # Makes the request to the google books api
 # Returns a python dictionary with the results
 def generalGoogleQuery(query):
-    url = 'https://www.googleapis.com/books/v1/volumes?q=%s' %query
+    # converts unicode to string in order to parse to percentage notation
+    q = query.encode('utf-8')
+    data = pathname2url(q)
+    print "Finished query encoding %s" %data
+    url = 'https://www.googleapis.com/books/v1/volumes?q=%s' %data
     searchResponse = urllib.urlopen(url)
     searchResults = searchResponse.read()
-    # extract useful information from google results
-    googleResults = parseGoogleResults(json.loads(searchResults))
-    ourDbResults = findGoogleResultsInDb(googleResults['isbns'])
+    r = json.loads(searchResults)
+    if r['totalItems']!= 0:
+        # extract useful information from google results
+        googleResults = parseGoogleResults(r)
+        ourDbResults = findGoogleResultsInDb(googleResults['isbns'])
 
-    results = {
-        'dbResults': ourDbResults,
-        'googleResults': googleResults,
-    }
-    print "RESULTS============="
+        results = {
+            'dbResults': ourDbResults,
+            'googleResults': googleResults,
+        }
+    else:
+        #build dictionaries with default values
+        googleResults = {
+            'totalItems' : 0,
+            'results' : [],
+            'isbns' : []
+        }
+        ourDbResults = {
+            'totalItems' : 0,
+            'results' : []
+        }
+        results = {
+            'dbResults': ourDbResults,
+            'googleResults' : googleResults
+        }
+    print "FINISHED============="
     print json.dumps(results, indent=4)
 
     return results
