@@ -3,7 +3,7 @@
 {% block search %}
 <!-- Search bar -->
 <div class="center">
-    <div class="input-group">
+    <form class="input-group">
         <input data-bind="value: actualQuery, valueUpdate: 'afterkeydown'"type="text" placeholder="Oprime Enter o el botón para buscar." class="form-control">
         <div class="input-group-btn">
             <button data-bind="html: delimiter" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Delimitar Búsqueda  <span class="caret"></span></button>
@@ -13,9 +13,9 @@
                 <li><a data-bind="click:$root.byCategory" href="#">por categoría</a></li>
                 <li><a data-bind="click:$root.byDefault" href="#">general</a></li>
             </ul>
-            <button data-bind="click:$root.getResults"  type="button" class="btn btn-info">Buscar</button>
+            <input data-bind="click:$root.getResults"  type="submit" class="btn btn-info" value="Buscar"></input>
         </div><!-- /btn-group -->
-    </div><!-- /input-group -->
+    </form><!-- /input-group -->
 </div><!-- /.col-lg-6 -->
 <!-- End search bar -->
 {% endblock %}
