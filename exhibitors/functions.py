@@ -152,7 +152,7 @@ def generalGoogleQuery(query):
             'googleResults' : googleResults
         }
     print "FINISHED============="
-    print json.dumps(results, indent=4)
+    #print json.dumps(results, indent=4)
 
     return results
 

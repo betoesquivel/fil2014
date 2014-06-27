@@ -4,7 +4,7 @@
 <!-- Search bar -->
 <div class="center">
     <form class="input-group">
-        <input id="searchBox" data-bind="value: actualQuery, valueUpdate: 'afterkeydown'"type="text" placeholder="Oprime Enter o el botón para buscar." class="form-control">
+        <input id="searchBox" name='q' data-bind="value: actualQuery, valueUpdate: 'afterkeydown'"type="text" placeholder="Oprime Enter o el botón para buscar." class="form-control">
         <div class="input-group-btn">
             <button data-bind="html: delimiter" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Delimitar Búsqueda  <span class="caret"></span></button>
             <ul class="dropdown-menu pull-down">
@@ -191,7 +191,7 @@
 
         self.getResults = function() {
             q = self.actualQuery();
-            $.getJSON('../expositores/libros/busqueda/', { query: q }, function(data){
+            $.getJSON('../expositores/libros/busqueda/', { q: q }, function(data){
                 self.jsonData(data);
                 // use observableArray.push(object) in order to push data to results
                 // cycle the jsonData and create results

@@ -1,0 +1,9 @@
+{{ object.title }}
+{% for author in object.author_set.all %}
+    {{author.name}}
+{% endfor %}
+{{ object.editorial.name }}
+{% for category in object.category_set.all %}
+    {{category.name}}
+{% endfor %}
+{{ object.synopsis }}

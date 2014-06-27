@@ -45,7 +45,16 @@ INSTALLED_APPS = (
     'searches',
     'presentations',
     'exhibitors',
+    'haystack',
 )
+# Haystack configuration
+import os
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
