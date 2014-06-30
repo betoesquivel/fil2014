@@ -83,7 +83,7 @@ def parseGoogleResults(googleResults):
         # Use it to guess where the item would be in our db
         # add newItem to ourItems that contains the parsed google results
         info = item['volumeInfo']
-        if 'industryIdentifiers' in info:
+        if 'publisher' in info:
             newItem = {
                 'title': '-',
                 'authors': '-',
@@ -95,21 +95,20 @@ def parseGoogleResults(googleResults):
                 newItem['title'] = info['title']
             if 'authors' in info:
                 newItem['authors'] = info['authors']
-            if 'publisher' in info:
-                newItem['editorial'] = info['publisher']
-                foundExhibitor = findPossibleExhibitor(newItem['editorial'])
-                if foundExhibitor is not None:
-                    newItem['exhibitor'] = foundExhibitor.name
-                    stands = findPossibleStands(foundExhibitor)
-                    for s in stands:
-                        newItem['stands'].append(s.location)
+            newItem['editorial'] = info['publisher']
+            foundExhibitor = findPossibleExhibitor(newItem['editorial'])
+            if foundExhibitor is not None:
+                newItem['exhibitor'] = foundExhibitor.name
+                stands = findPossibleStands(foundExhibitor)
+                for s in stands:
+                    newItem['stands'].append(s.location)
 
             ourItems.append(newItem)
 
             # Get ISBN_13 or, if missing, ISBN_10.
             # And add the isbn to our list
-            newIsbn = parseIndustryIdentifiers(info['industryIdentifiers'])
-            ourIsbns.append(newIsbn)
+            # newIsbn = parseIndustryIdentifiers(info['industryIdentifiers'])
+            # ourIsbns.append(newIsbn)
 
     ourResults['results'] = ourItems
     ourResults['isbns'] = ourIsbns
@@ -123,7 +122,7 @@ def generalGoogleQuery(query):
     q = query.encode('utf-8')
     data = pathname2url(q)
     print "Finished query encoding %s" %data
-    url = 'https://www.googleapis.com/books/v1/volumes?q=%s' %data
+    url = 'https://www.googleapis.com/books/v1/volumes?q=%s&maxResults=40' %data
     searchResponse = urllib.urlopen(url)
     searchResults = searchResponse.read()
     r = json.loads(searchResults)

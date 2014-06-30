@@ -1,7 +1,8 @@
 {% extends "baseSearch.html" %}
 {% block style %}
     .loading {
-    position: relative;
+    position: absolute;
+    top: 300px;
     left: 50%;
     width: 24px;
     height: 24px;
@@ -140,17 +141,17 @@
             <input data-bind="click:$root.getResults"  type="submit" class="btn btn-info" value="Buscar"></input>
         </div><!-- /btn-group -->
     </form><!-- /input-group -->
+    <div data-bind="visible: loading" class="loading">
+        <i></i>
+        <i></i>
+        <i></i>
+    </div>
 </div><!-- /.col-lg-6 -->
 <!-- End search bar -->
 {% endblock %}
 
 {% block results %}
 <!-- > <h2 data-bind="visible: loading">Cargando resultados...</h1> -->
-    <div data-bind="visible: loading" class="loading">
-        <i></i>
-        <i></i>
-        <i></i>
-    </div>
     <h4 data-bind="visible: notLoading, text: ourResultsDescription" class="">Se encontraron 8 resultados en nuestra base de datos.</h4>
     <div data-bind="visible: ourResults().length > 0">
         <table class="table table-bordered">
@@ -208,8 +209,7 @@
         </div> <!-- button group -->
     </div>
 
-    <!-- json display -->
-    <!-- DEBUG...
+    <!-- json display 
     <div>
         <h2>DEBUG</h2>
         <h4>View Model</h4>
@@ -261,8 +261,7 @@
             <p data-bind="text:jsonData"></p>
         </h4>
     </div>
-    <!-- end json display 
-    -->
+     end json display  -->
 {% endblock %}
 
 {% block js %}
