@@ -1,4 +1,128 @@
 {% extends "baseSearch.html" %}
+{% block style %}
+    .loading {
+    position: relative;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    }
+
+    .loading i {
+    position: absolute;
+    top: 24px; left: 24px;
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: #799ED2;
+    border-radius: 24px;
+    -webkit-animation: spin2 1.5s ease-in-out infinite;
+    }
+    .loading i:first-child {
+    top: -24px; left: 0;
+    background: #194685;
+    -webkit-animation: spin 1.5s ease-in-out infinite;
+    }
+    .loading i:last-child {
+    top: 24px; left: -24px;
+    background: #C7202C;
+    -webkit-animation: spin3 1.5s ease-in-out infinite;
+    }
+
+    @-webkit-keyframes spin {
+    0% {
+        top: -24px;
+        left: 0;
+        -webkit-transform: scale(1);
+    }
+    17% {
+        -webkit-transform: scale(.5);
+    }
+    33% {
+        top: 24px;
+        left: 24px;
+        -webkit-transform: scale(1);
+    }
+    50% {
+        -webkit-transform: scale(.5);
+    }
+    66% {
+        top: 24px;
+        left: -24px;
+        -webkit-transform: scale(1);
+    }
+    83% {
+        -webkit-transform: scale(.5);
+    }
+    100% {
+        top: -24px;
+        left: 0;
+        -webkit-transform: scale(1);
+    }
+    }
+    @-webkit-keyframes spin2 {
+    0% {
+        top: 24px;
+        left: 24px;
+        -webkit-transform: scale(1);
+    }
+    17% {
+        -webkit-transform: scale(.5);
+    }
+    33% {
+        top: 24px;
+        left: -24px;
+        -webkit-transform: scale(1);
+    }
+    50% {
+        -webkit-transform: scale(.5);
+    }
+    66% {
+        top: -24px;
+        left: 0;
+        -webkit-transform: scale(1);
+    }
+    83% {
+        -webkit-transform: scale(.5);
+    }
+    100% {
+        top: 24px;
+        left: 24px;
+        -webkit-transform: scale(1);
+    }
+    }
+    @-webkit-keyframes spin3 {
+    0% {
+        top: 24px;
+        left: -24px;
+        -webkit-transform: scale(1);
+    }
+    17% {
+        -webkit-transform: scale(.5);
+    }
+    33% {
+        top: -24px;
+        left: 0;
+        -webkit-transform: scale(1);
+    }
+    50% {
+        -webkit-transform: scale(.5);
+    }
+    66% {
+        top: 24px;
+        left: 24px;
+        -webkit-transform: scale(1);
+    }
+    83% {
+        -webkit-transform: scale(.5);
+    }
+    100% {
+        top: 24px;
+        left: -24px;
+        -webkit-transform: scale(1);
+    }
+    }
+{% endblock %}
 
 {% block search %}
 <!-- Search bar -->
@@ -21,8 +145,14 @@
 {% endblock %}
 
 {% block results %}
-    <h4 data-bind="text: googleResultsDescription" class="">Se encontraron 8 resultados en nuestra base de datos.</h4>
-    <div data-bind="visible: googleResults().length > 1">
+<!-- > <h2 data-bind="visible: loading">Cargando resultados...</h1> -->
+    <div data-bind="visible: loading" class="loading">
+        <i></i>
+        <i></i>
+        <i></i>
+    </div>
+    <h4 data-bind="visible: notLoading, text: ourResultsDescription" class="">Se encontraron 8 resultados en nuestra base de datos.</h4>
+    <div data-bind="visible: ourResults().length > 0">
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -48,8 +178,9 @@
             <button class="btn" contenteditable="false">2</button>
             <button class="btn" contenteditable="false">3</button>
         </div> <!-- button group -->
-        <h4 class="">Se encontraron 431 resultados en la base de datos de Google.</h4>
-
+    </div>
+    <h4 data-bind="visible: notLoading, text: googleResultsDescription" class="">Se encontraron 431 resultados en la base de datos de Google.</h4>
+    <div data-bind="visible: googleResults().length > 0">
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -78,6 +209,7 @@
     </div>
 
     <!-- json display -->
+    <!-- DEBUG...
     <div>
         <h2>DEBUG</h2>
         <h4>View Model</h4>
@@ -129,7 +261,8 @@
             <p data-bind="text:jsonData"></p>
         </h4>
     </div>
-    <!-- end json display -->
+    <!-- end json display 
+    -->
 {% endblock %}
 
 {% block js %}
@@ -146,6 +279,10 @@
 
         self.delimiter = ko.observable("Delimitar Búsqueda  <span class='caret'></span>");
         self.actualQuery = ko.observable('');
+        self.loading = ko.observable(false);
+        self.notLoading = ko.computed(function() {
+            return !self.loading();
+        }, self);
 
         self.ourResults = ko.observableArray([
             {
@@ -190,7 +327,11 @@
         };
 
         self.getResults = function() {
+            self.loading(true);
             q = self.actualQuery();
+            self.ourResults([]);
+            self.googleResults([]);
+
             $.getJSON('../expositores/libros/busqueda/', { q: q }, function(data){
                 self.jsonData(data);
                 // use observableArray.push(object) in order to push data to results
@@ -203,7 +344,7 @@
                 for (var i = 0; i < googleData['results'].length; i++) {
                     r = new Result(
                         googleData['results'][i]['title'],
-                        googleData['results'][i]['author'][0],
+                        googleData['results'][i]['authors'][0],
                         googleData['results'][i]['editorial'],
                         googleData['results'][i]['exhibitor'],
                         googleData['results'][i]['stands'][0]
@@ -215,7 +356,7 @@
                 for (var i = 0; i < dbData['results'].length; i++) {
                 r = new Result(
                     dbData['results'][i]['title'],
-                    dbData['results'][i]['author'][0],
+                    dbData['results'][i]['authors'][0],
                     dbData['results'][i]['editorial'],
                     dbData['results'][i]['exhibitor'],
                     dbData['results'][i]['stands'][0]
@@ -223,6 +364,8 @@
                     db.push(r);
                 }
                 self.ourResults(db);
+                console.log(self.ourResults().length);
+                self.loading(false);
             });
         };
 

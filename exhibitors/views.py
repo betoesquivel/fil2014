@@ -20,17 +20,34 @@ def getBooks(request):
     print "Made the search"
 
     print "No errors on db search..."
+    dbResults = {'results':[], 'totalItems':len(haystackResults)}
     for sr in haystackResults:
-        print sr.object.title
-        print sr.object.author_set.all()
-        print sr.object.editorial.name
-        print sr.object.editorial.exhibitor.name
-        print sr.object.editorial.exhibitor.stand_set.all()
+        b = sr.object
+        title = b.title
+        authors = b.author_set.all()
+        editorial = b.editorial.name
+        exhibitor = b.editorial.exhibitor.name
+        stands = b.editorial.exhibitor.stand_set.all()
+        newResult = {
+            'title': title,
+            'authors': [],
+            'editorial': editorial,
+            'exhibitor': exhibitor,
+            'stands': [],
+        }
+        for a in authors:
+            newResult['authors'].append(a.name)
+        for s in stands:
+            newResult['stands'].append(s.location)
+        dbResults['results'].append(newResult)
+
+    print json.dumps(dbResults, indent=4)
 
     q = request.GET.get('q', '')
     print "Query..."
     print q
     data_to_dump = generalGoogleQuery(q)
+    data_to_dump['dbResults'] = dbResults
     data = json.dumps(data_to_dump)
     return HttpResponse(data, content_type='application/json')
 

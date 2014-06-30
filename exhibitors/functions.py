@@ -86,7 +86,7 @@ def parseGoogleResults(googleResults):
         if 'industryIdentifiers' in info:
             newItem = {
                 'title': '-',
-                'author': '-',
+                'authors': '-',
                 'editorial': '-',
                 'exhibitor': '-',
                 'stands' : [],
@@ -94,7 +94,7 @@ def parseGoogleResults(googleResults):
             if 'title' in info:
                 newItem['title'] = info['title']
             if 'authors' in info:
-                newItem['author'] = info['authors']
+                newItem['authors'] = info['authors']
             if 'publisher' in info:
                 newItem['editorial'] = info['publisher']
                 foundExhibitor = findPossibleExhibitor(newItem['editorial'])
@@ -130,10 +130,10 @@ def generalGoogleQuery(query):
     if r['totalItems']!= 0:
         # extract useful information from google results
         googleResults = parseGoogleResults(r)
-        ourDbResults = findGoogleResultsInDb(googleResults['isbns'])
+        #ourDbResults = findGoogleResultsInDb(googleResults['isbns'])
 
         results = {
-            'dbResults': ourDbResults,
+            #'dbResults': ourDbResults,
             'googleResults': googleResults,
         }
     else:
@@ -143,12 +143,8 @@ def generalGoogleQuery(query):
             'results' : [],
             'isbns' : []
         }
-        ourDbResults = {
-            'totalItems' : 0,
-            'results' : []
-        }
         results = {
-            'dbResults': ourDbResults,
+            #'dbResults': ourDbResults,
             'googleResults' : googleResults
         }
     print "FINISHED============="
