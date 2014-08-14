@@ -138,7 +138,7 @@
                 <li><a data-bind="click:$root.byCategory" href="#">por categoría</a></li>
                 <li><a data-bind="click:$root.byDefault" href="#">general</a></li>
             </ul>
-            <input data-bind="click:$root.getResults"  type="submit" class="btn btn-info" value="Buscar"></input>
+            <input data-bind="click:$root.queryServer"  type="submit" class="btn btn-info" value="Buscar"></input>
         </div><!-- /btn-group -->
     </form><!-- /input-group -->
     <div data-bind="visible: loading" class="loading">
@@ -325,6 +325,59 @@
             self.delimiter("Delimitar Búsqueda  <span class='caret'></span>");
         };
 
+        self.queryServer = function() {
+            self.loading(true);
+            self.getDbResults();
+            self.loading(false);
+            self.getGoogleResults();
+        }
+
+        self.getDbResults = function() {
+            q = self.actualQuery();
+            self.ourResults([]);
+
+            $.getJSON('../expositores/libros/busquedaFeria/', { q: q }, function(data){
+                self.jsonData(data);
+                var dbData = data['dbResults'];
+                var db = [];
+                for (var i = 0; i < dbData['results'].length; i++) {
+                    r = new Result(
+                        dbData['results'][i]['title'],
+                        dbData['results'][i]['authors'][0],
+                        dbData['results'][i]['editorial'],
+                        dbData['results'][i]['exhibitor'],
+                        dbData['results'][i]['stands'][0]
+                    );
+                    db.push(r);
+                }
+                self.ourResults(db);
+                console.log(self.ourResults().length);
+            });
+        };
+        self.getGoogleResults = function(){
+            q = self.actualQuery();
+            self.googleResults([]);
+
+            $.getJSON('../expositores/libros/busquedaGoogle/', { q: q }, function(data){
+                self.jsonData(data);
+                // use observableArray.push(object) in order to push data to results
+                // cycle the jsonData and create results
+                // update observableArrays...
+                var googleData = data['googleResults'];
+
+                var google = [];
+                for (var i = 0; i < googleData['results'].length; i++) {
+                    r = new Result(
+                        googleData['results'][i]['title'],
+                        googleData['results'][i]['authors'][0],
+                        googleData['results'][i]['editorial'],
+                        googleData['results'][i]['exhibitor'],
+                        googleData['results'][i]['stands'][0]
+                    );
+                    google.push(r);
+                } self.googleResults(google);
+            });
+        };
         self.getResults = function() {
             self.loading(true);
             q = self.actualQuery();

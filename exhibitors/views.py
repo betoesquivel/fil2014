@@ -9,7 +9,7 @@ import json
 def books(request):
     return render_to_response('books.html', {'activeTab':"libros"})
 
-def getBooks(request):
+def getDbBooks(request):
     print "Baby steps"
     # we retrieve the query to display it in the template
     form = BooksSearchForm(request.GET)
@@ -46,8 +46,15 @@ def getBooks(request):
     q = request.GET.get('q', '')
     print "Query..."
     print q
-    data_to_dump = generalGoogleQuery(q)
     data_to_dump['dbResults'] = dbResults
+    data = json.dumps(data_to_dump)
+    return HttpResponse(data, content_type='application/json')
+
+def getGoogleBooks(request):
+    q = request.GET.get('q', '')
+    print "Query..."
+    print q
+    data_to_dump = generalGoogleQuery(q)
     data = json.dumps(data_to_dump)
     return HttpResponse(data, content_type='application/json')
 
