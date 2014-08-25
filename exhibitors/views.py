@@ -46,6 +46,7 @@ def getDbBooks(request):
     q = request.GET.get('q', '')
     print "Query..."
     print q
+    data_to_dump = {}
     data_to_dump['dbResults'] = dbResults
     data = json.dumps(data_to_dump)
     return HttpResponse(data, content_type='application/json')
@@ -54,6 +55,7 @@ def getGoogleBooks(request):
     q = request.GET.get('q', '')
     print "Query..."
     print q
+    data_to_dump = {}
     data_to_dump = generalGoogleQuery(q)
     data = json.dumps(data_to_dump)
     return HttpResponse(data, content_type='application/json')
